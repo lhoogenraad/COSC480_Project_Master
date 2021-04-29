@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+<annotation>
+  <folder>2019_12/Ewes/105_PANA</folder>
+  <filename>P1050308.JPG</filename>
+  <path>2019_12/Ewes/105_PANA/P1050308.JPG</path>
+  <source>
+    <database>Unknown</database>
+  </source>
+  <size>
+    <width>4592</width>
+    <height>2584</height>
+    <depth>3</depth>
+  </size>
+  <segmented>0</segmented>
+  <rotation>0</rotation>
+  <object>
+    <name>sheepface</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox>
+      <xmin>366</xmin>
+      <ymin>367</ymin>
+      <xmax>2685</xmax>
+      <ymax>2562</ymax>
+    </bndbox>
+  </object>
+</annotation>

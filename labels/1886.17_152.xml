@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+<annotation>
+  <folder>2020_06/ims</folder>
+  <filename>1886.17_152.JPG</filename>
+  <path>2020_06/ims/1886.17_152.JPG</path>
+  <source>
+    <database>Unknown</database>
+  </source>
+  <size>
+    <width>3008</width>
+    <height>2000</height>
+    <depth>3</depth>
+  </size>
+  <segmented>0</segmented>
+  <rotation>0</rotation>
+  <object>
+    <name>sheepface</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox>
+      <xmin>568</xmin>
+      <ymin>94</ymin>
+      <xmax>2432</xmax>
+      <ymax>1933</ymax>
+    </bndbox>
+  </object>
+</annotation>

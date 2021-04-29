@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+<annotation>
+  <folder>2019_12/lambs/101_PANA</folder>
+  <filename>P1010311.JPG</filename>
+  <path>2019_12/lambs/101_PANA/P1010311.JPG</path>
+  <source>
+    <database>Unknown</database>
+  </source>
+  <size>
+    <width>4592</width>
+    <height>2584</height>
+    <depth>3</depth>
+  </size>
+  <segmented>0</segmented>
+  <rotation>0</rotation>
+  <object>
+    <name>sheepface</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox>
+      <xmin>889</xmin>
+      <ymin>241</ymin>
+      <xmax>2841</xmax>
+      <ymax>1998</ymax>
+    </bndbox>
+  </object>
+</annotation>
