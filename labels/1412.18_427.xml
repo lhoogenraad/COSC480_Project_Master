@@ -13,6 +13,9 @@
   </size>
   <segmented>0</segmented>
   <rotation>0</rotation>
+  <adjust>
+    <brightness>1.0</brightness>
+  </adjust>
   <object>
     <name>sheepface</name>
     <pose>Unspecified</pose>

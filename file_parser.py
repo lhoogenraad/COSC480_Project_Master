@@ -1,13 +1,15 @@
 from PIL import Image, ImageTk, ImageEnhance
 import numpy as np
-# import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
+import matplotlib.image as mpimg
+from PIL import Image
 import sys, getopt, os
 import time
 import tkinter as tk
 import xml.etree.ElementTree as ET
 from xml.dom import minidom
 import cv2
-
+print('starting')
 
 # Code adopted from run_labeller.py
 # There will be a lot of adopted/inspired code from run_labller.py
@@ -81,3 +83,39 @@ labelled = find_labelled(labelsfile)[0]
 # If any of the labels aren't present for the given image, a value of -1 should be given.
 # (These dimensions may change based on what information we need for the labels e.g. x and y coords
 # of mouth and nose labels)
+print(labelled[0])
+
+img = Image.open('2020_06/ims/1022.18_315.jpg')
+
+
+tree = ET.parse(labelled[0])
+root = tree.getroot()
+
+x1 = 0
+y1 = 0
+x2 = 0
+y2 = 0
+
+for node in root:
+    if node.tag == 'object':
+        for obj_child in node:
+            #print(obj_child.tag, obj_child.attrib)
+            if obj_child.tag == 'bndbox':
+                for bb in obj_child:
+                    print(bb.tag, bb.attrib, bb.text)
+                    if bb.tag == 'xmin':
+                       x1 = int(bb.text)
+                    elif bb.tag == 'ymin':
+                        y1 = int(bb.text)
+                    elif bb.tag == 'xmax':
+                        x2 = int(bb.text)
+                    elif bb.tag == 'ymax':
+                        y2 = int(bb.text)
+
+print(x1, y1, x2, y2)
+
+img_cropped = img.crop((x1, y1, x2, y2))
+
+plt.imshow(img)
+plt.imshow(img_cropped)
+plt.show()
