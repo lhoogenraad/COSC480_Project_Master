@@ -9,7 +9,7 @@ import tkinter as tk
 import xml.etree.ElementTree as ET
 from xml.dom import minidom
 import cv2
-print('starting')
+print('starting file parser')
 
 # Code adopted from run_labeller.py
 # There will be a lot of adopted/inspired code from run_labller.py
@@ -96,13 +96,16 @@ y1 = 0
 x2 = 0
 y2 = 0
 
+# iterate through xml tree
 for node in root:
+    # Find node named object
     if node.tag == 'object':
         for obj_child in node:
-            #print(obj_child.tag, obj_child.attrib)
+            # Find the bndbox node inside the object node
             if obj_child.tag == 'bndbox':
+                # Extract the dimensions of the bndbx for the purposes of cropping the
+                # image around the face of the sheep
                 for bb in obj_child:
-                    print(bb.tag, bb.attrib, bb.text)
                     if bb.tag == 'xmin':
                        x1 = int(bb.text)
                     elif bb.tag == 'ymin':
