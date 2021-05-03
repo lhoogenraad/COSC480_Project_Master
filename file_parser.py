@@ -67,6 +67,25 @@ def getXMLFile(filepath):
     root = xmltree.getroot()
     return root
 
+def get_dir(filename):
+    file_dir = ''
+    filename_start = filename[:4]
+    if filename_start == 'P101':
+        file_dir = '2019_12/lambs/101_PANA/'
+    elif filename_start == 'P102':
+        file_dir = '2019_12/lambs/102_PANA/'
+    elif filename_start == 'P103':
+        if int(filename[4:8]) <= 977:
+            file_dir = '2019_12/lambs/103_PANA/'
+        else:
+            file_dir = '2019_12/Ewes/103_PANA/'
+    elif filename_start == 'P104':
+        file_dir = '2019_12/Ewes/104_PANA/'
+    elif filename_start == 'P105':
+        file_dir = '2019_12/Ewes/105_PANA/'
+    else:
+        file_dir = '2020_06/ims/'
+    return file_dir
 
 # This file takes a list of XML filenames/paths and uses these
 # to get the boundbox tags of each XML file, and crop the corresponding
@@ -78,13 +97,10 @@ def compress_imgs(files):
         filename = os.path.basename(os.path.normpath(file))[:-4]
         img_filename = filename + '.jpg'
         file_dir = ''
+        # if image doesn't exist in compressed folder, we continue
         if not os.path.isfile('compressed/' + img_filename):
-            file_dir = filename[:4]
-            print(filename)
-            if filename == 'P101':
-                file_dir = 'lambs/101_PANA/'
-            elif filename == 'P102':
-                file_dir = 'lambs/102_PANA/'
+            file_dir = get_dir(filename)
+            print(filename + '\t' + file_dir)
 
 # Our current working directory.
 currentdir = os.getcwd()
