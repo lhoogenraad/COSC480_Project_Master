@@ -83,7 +83,6 @@ labelled = find_labelled(labelsfile)[0]
 # If any of the labels aren't present for the given image, a value of -1 should be given.
 # (These dimensions may change based on what information we need for the labels e.g. x and y coords
 # of mouth and nose labels)
-print(labelled[0])
 
 img = Image.open('2020_06/ims/1022.18_315.jpg')
 
@@ -115,7 +114,6 @@ for node in root:
                     elif bb.tag == 'ymax':
                         y2 = int(bb.text)
 
-print(x1, y1, x2, y2)
 
 img_cropped = img.crop((x1, y1, x2, y2))
 
