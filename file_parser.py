@@ -142,6 +142,10 @@ def compress_imgs(files):
             cropped_img.save('compressed/'+img_filename,optimize=True)
 
 
+
+#####################################################################
+# ------------------------------ Main ------------------------------#
+#####################################################################
 # Our current working directory.
 currentdir = os.getcwd()
 # The path to the file containing all the labels
@@ -160,37 +164,6 @@ labelled = find_labelled(labelsfile)[0]
 # of mouth and nose labels)
 
 img = Image.open('2020_06/ims/1022.18_315.jpg')
-
-
-tree = ET.parse(labelled[0])
-root = tree.getroot()
-
-x1 = 0
-y1 = 0
-x2 = 0
-y2 = 0
-
-# iterate through xml tree
-for node in root:
-    # Find node named object
-    if node.tag == 'object':
-        for obj_child in node:
-            # Find the bndbox node inside the object node
-            if obj_child.tag == 'bndbox':
-                # Extract the dimensions of the bndbx for the purposes of cropping the
-                # image around the face of the sheep
-                for bb in obj_child:
-                    if bb.tag == 'xmin':
-                       x1 = int(bb.text)
-                    elif bb.tag == 'ymin':
-                        y1 = int(bb.text)
-                    elif bb.tag == 'xmax':
-                        x2 = int(bb.text)
-                    elif bb.tag == 'ymax':
-                        y2 = int(bb.text)
-
-
-img_cropped = img.crop((x1, y1, x2, y2))
 
 compress_imgs(labelled)
 
