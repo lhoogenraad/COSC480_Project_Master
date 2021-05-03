@@ -67,6 +67,25 @@ def getXMLFile(filepath):
     root = xmltree.getroot()
     return root
 
+
+# This file takes a list of XML filenames/paths and uses these
+# to get the boundbox tags of each XML file, and crop the corresponding
+# sheep image according to the values inside the boundbox tags.
+def compress_imgs(files):
+
+
+    for file in files:
+        filename = os.path.basename(os.path.normpath(file))[:-4]
+        img_filename = filename + '.jpg'
+        file_dir = ''
+        if not os.path.isfile('compressed/' + img_filename):
+            file_dir = filename[:4]
+            print(filename)
+            if filename == 'P101':
+                file_dir = 'lambs/101_PANA/'
+            elif filename == 'P102':
+                file_dir = 'lambs/102_PANA/'
+
 # Our current working directory.
 currentdir = os.getcwd()
 # The path to the file containing all the labels
@@ -116,6 +135,8 @@ for node in root:
 
 
 img_cropped = img.crop((x1, y1, x2, y2))
+
+compress_imgs(labelled)
 
 plt.imshow(img)
 plt.imshow(img_cropped)
