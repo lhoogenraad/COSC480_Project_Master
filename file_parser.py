@@ -87,12 +87,40 @@ def get_dir(filename):
         file_dir = '2020_06/ims/'
     return file_dir
 
+def get_dims_for_cropping(xmlFile):
+    tree = ET.parse(xmlFile)
+    root = tree.getroot()
+
+    x1 = 0
+    y1 = 0
+    x2 = 0
+    y2 = 0
+
+    # iterate through xml tree
+    for node in root:
+        # Find node named object
+        if node.tag == 'object':
+            for obj_child in node:
+                # Find the bndbox node inside the object node
+                if obj_child.tag == 'bndbox':
+                    # Extract the dimensions of the bndbx for the purposes of cropping the
+                    # image around the face of the sheep
+                    for bb in obj_child:
+                        if bb.tag == 'xmin':
+                            x1 = int(bb.text)
+                        elif bb.tag == 'ymin':
+                            y1 = int(bb.text)
+                        elif bb.tag == 'xmax':
+                            x2 = int(bb.text)
+                        elif bb.tag == 'ymax':
+                            y2 = int(bb.text)
+    return x1, y1, x2, y2
+
 # This file takes a list of XML filenames/paths and uses these
 # to get the boundbox tags of each XML file, and crop the corresponding
 # sheep image according to the values inside the boundbox tags.
 def compress_imgs(files):
-
-
+    print('compressing images')
     for file in files:
         filename = os.path.basename(os.path.normpath(file))[:-4]
         img_filename = filename + '.jpg'
@@ -100,7 +128,19 @@ def compress_imgs(files):
         # if image doesn't exist in compressed folder, we continue
         if not os.path.isfile('compressed/' + img_filename):
             file_dir = get_dir(filename)
-            print(filename + '\t' + file_dir)
+            dims = get_dims_for_cropping(file)
+            print('found uncompressed labelled image at ' + file_dir + img_filename)
+
+            x1 = dims[0]
+            y1 = dims[1]
+            x2 = dims[2]
+            y2 = dims[3]
+
+            og_image = Image.open(file_dir + img_filename)
+            cropped_img = og_image.crop((x1, y1, x2, y2))
+            cropped_img = cropped_img.resize((128, 128), Image.ANTIALIAS)
+            cropped_img.save('compressed/'+img_filename,optimize=True)
+
 
 # Our current working directory.
 currentdir = os.getcwd()
@@ -154,6 +194,4 @@ img_cropped = img.crop((x1, y1, x2, y2))
 
 compress_imgs(labelled)
 
-plt.imshow(img)
-plt.imshow(img_cropped)
 plt.show()
