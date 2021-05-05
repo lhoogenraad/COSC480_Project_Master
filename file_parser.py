@@ -141,6 +141,26 @@ def compress_imgs(files):
             cropped_img = cropped_img.resize((128, 128), Image.ANTIALIAS)
             cropped_img.save('compressed/'+img_filename,optimize=True)
 
+# Given a list of xml files, get all the inputs required
+# for identifying the sheep facial features i.e. coords of
+# the facial features such as right eye etc.
+#
+# Returns a 3d array, the first dimension being an array of complete sheep labels.
+# The second dimension being an array of the individual sheep label 'objects'
+# e.g. right eye, left mouth etc.
+# The third dimension being the individual values of the facial feature
+# label e.g. left eye begins at 13 pixels down.
+# e.g. array[4][0][2] represents the 3rd value (xmax if i remember correctly)
+# of the left eye of the 5th sheep in the labelled dataset.
+def get_inputs(files):
+    print('not yet implemented')
+
+    # Our current working directory.
+    currentdir = os.getcwd()
+    # The path to the file containing all the labels
+    labelsfile = read_labels(os.path.join(currentdir, "labels"))
+    # All the label xml files that have been labelled.
+    labelled = find_labelled(labelsfile)[0]
 
 
 #####################################################################
@@ -153,18 +173,6 @@ labelsfile = read_labels(os.path.join(currentdir, "labels"))
 # All the label xml files that have been labelled.
 labelled = find_labelled(labelsfile)[0]
 
-# The layout of the inputs we want to give the cnn file are such:
-# We want 2 arrays, one of input images, and one of the labels.
-# I haven't determined the dimensions of the image array
-# For the labels array, each index will contain a 6 length array, determining,
-# in order, the locations of the left eye, right eye, left nose, right nose,
-# left mouth, right mouth.
-# If any of the labels aren't present for the given image, a value of -1 should be given.
-# (These dimensions may change based on what information we need for the labels e.g. x and y coords
-# of mouth and nose labels)
-
-img = Image.open('2020_06/ims/1022.18_315.jpg')
-
+# Run this everytime the script executes to check for labelled XMl files
+# that don't have corresponding compressed imgs in the compressed directory
 compress_imgs(labelled)
-
-plt.show()
