@@ -87,7 +87,7 @@ def get_dir(filename):
         file_dir = '2020_06/ims/'
     return file_dir
 
-def get_dims_for_cropping(xmlFile):
+def get_dims(xmlFile):
     tree = ET.parse(xmlFile)
     root = tree.getroot()
 
@@ -128,7 +128,7 @@ def compress_imgs(files):
         # if image doesn't exist in compressed folder, we continue
         if not os.path.isfile('compressed/' + img_filename):
             file_dir = get_dir(filename)
-            dims = get_dims_for_cropping(file)
+            dims = get_dims(file)
             print('found uncompressed labelled image at ' + file_dir + img_filename)
 
             x1 = dims[0]
@@ -152,15 +152,37 @@ def compress_imgs(files):
 # label e.g. left eye begins at 13 pixels down.
 # e.g. array[4][0][2] represents the 3rd value (xmax if i remember correctly)
 # of the left eye of the 5th sheep in the labelled dataset.
-def get_inputs(files):
+#
+# This will be a long, yucky looking method, apologies in advance
+def get_inputs():
     print('not yet implemented')
-
     # Our current working directory.
     currentdir = os.getcwd()
     # The path to the file containing all the labels
     labelsfile = read_labels(os.path.join(currentdir, "labels"))
     # All the label xml files that have been labelled.
     labelled = find_labelled(labelsfile)[0]
+    inputs = []
+    # for each XML files in the list of filenames in labelled
+    for i in range(len(labelled)):
+        # These vars represent the width and height of the original image
+        # we are working with. This is important since we need these dimensions
+        # to determine our new label positions on the cropped, resized image
+        imgheight = -1
+        imgwidth = -1
+        tree = ET.parse(labelled[i])
+        # Append an empty array that gives no labels.
+        inputs.append([-1, -1, -1, -1, -1, -1])
+        root = tree.getroot()
+        # finding the dimensions of the original, uncompressed img
+        for node in root:
+            if node.tag == 'size':
+                for sizenode in node:
+                    if sizenode.tag == 'width':
+                        imgwidth = sizenode.text
+                    elif sizenode.tag == 'height':
+                        imgheight = sizenode.text
+        print(imgheight, imgwidth)
 
 
 #####################################################################
@@ -176,3 +198,5 @@ labelled = find_labelled(labelsfile)[0]
 # Run this everytime the script executes to check for labelled XMl files
 # that don't have corresponding compressed imgs in the compressed directory
 compress_imgs(labelled)
+
+get_inputs()
