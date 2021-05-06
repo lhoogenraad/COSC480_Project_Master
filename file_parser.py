@@ -141,6 +141,34 @@ def compress_imgs(files):
             cropped_img = cropped_img.resize((128, 128), Image.ANTIALIAS)
             cropped_img.save('compressed/'+img_filename,optimize=True)
 
+# yeah this is yikers
+def get_obj_values(file, objname):
+    # Values array, by order: xmin, ymin, xmax, ymax
+    values = [-1, -1, -1, -1]
+    tree = ET.parse(file)
+    root = tree.getroot()
+
+    for node in root:
+        if node.tag == 'object':
+            for objnode in node:
+                if objnode.tag == 'subobj':
+                    # At this point, we are iterating through all the nodes
+                    # in the <subnode></subnode> tag
+                    for subobjsubnode in objnode:
+                        # If we have found the right subobj node
+                        if subobjsubnode.text == objname:
+                            for findcoords in objnode:
+                                if findcoords.tag == 'coords':
+                                    for coordsobj in findcoords:
+                                        if coordsobj.tag == 'x1':
+                                            values[0] = coordsobj.text
+                                        elif coordsobj.tag == 'y1':
+                                            values[1] = coordsobj.text
+                                        elif coordsobj.tag == 'x2':
+                                            values[2] = coordsobj.text
+                                        elif coordsobj.tag == 'y2':
+                                            values[3] = coordsobj.text
+    return values
 # Given a list of xml files, get all the inputs required
 # for identifying the sheep facial features i.e. coords of
 # the facial features such as right eye etc.
@@ -200,3 +228,5 @@ labelled = find_labelled(labelsfile)[0]
 compress_imgs(labelled)
 
 get_inputs()
+
+print(get_obj_values('labels/1094.18_336.xml', 'reye'))
