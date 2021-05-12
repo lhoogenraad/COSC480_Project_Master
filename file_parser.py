@@ -232,9 +232,9 @@ def get_inputs():
                 # Convert float result to int and round down so we maintain
                 # our -1 encoding for non-present labels
                 input[0] = int(math.floor(input[0]/x_diff))
-                input[1] = int(math.floor(input[1]/x_diff))
+                input[1] = int(math.floor(input[1]/y_diff))
                 input[2] = int(math.floor(input[2]/x_diff))
-                input[3] = int(math.floor(input[3]/x_diff))
+                input[3] = int(math.floor(input[3]/y_diff))
 
         print(inputs, '\n')
         inputsReturn.append(inputs)
