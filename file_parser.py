@@ -9,6 +9,7 @@ import tkinter as tk
 import xml.etree.ElementTree as ET
 from xml.dom import minidom
 import cv2
+import math
 print('starting file parser')
 
 # Code adopted from run_labeller.py
@@ -164,13 +165,13 @@ def get_obj_values(file, objname):
                                 if findcoords.tag == 'coords':
                                     for coordsobj in findcoords:
                                         if coordsobj.tag == 'x1':
-                                            values[0] = coordsobj.text
+                                            values[0] = int(coordsobj.text)
                                         elif coordsobj.tag == 'y1':
-                                            values[1] = coordsobj.text
+                                            values[1] = int(coordsobj.text)
                                         elif coordsobj.tag == 'x2':
-                                            values[2] = coordsobj.text
+                                            values[2] = int(coordsobj.text)
                                         elif coordsobj.tag == 'y2':
-                                            values[3] = coordsobj.text
+                                            values[3] = int(coordsobj.text)
     return values
 
 
@@ -186,7 +187,7 @@ def get_obj_values(file, objname):
 # e.g. array[4][0][2] represents the 3rd value (xmax if i remember correctly)
 # of the left eye of the 5th sheep in the labelled dataset.
 #
-# This will be a long, yucky looking method, apologies in advance
+# This will be a long, yucky looking method, I sincerely apologise!
 def get_inputs():
     print('not yet implemented')
     # Our current working directory.
@@ -195,17 +196,16 @@ def get_inputs():
     labelsfile = read_labels(os.path.join(currentdir, "labels"))
     # All the label xml files that have been labelled.
     labelled = find_labelled(labelsfile)[0]
-    inputs = [-1, -1, -1, -1, -1, -1]
+    inputsReturn = []
     # for each XML files in the list of filenames in labelled
     for i in range(len(labelled)):
+        inputs = [-1, -1, -1, -1, -1, -1]
         # These vars represent the width and height of the original image
         # we are working with. This is important since we need these dimensions
         # to determine our new label positions on the cropped, resized image
         imgheight = -1
         imgwidth = -1
         tree = ET.parse(labelled[i])
-        # Append an empty array that gives no labels.
-        #inputs.append([-1, -1, -1, -1, -1, -1])
         root = tree.getroot()
         # finding the dimensions of the original, uncompressed img
         for node in root:
@@ -215,6 +215,8 @@ def get_inputs():
                         imgwidth = int(sizenode.text)
                     elif sizenode.tag == 'height':
                         imgheight = int(sizenode.text)
+
+        # Here we are finding the
         x_diff = imgwidth/128
         y_diff = imgheight/128
         inputs[0] = get_obj_values(labelled[i], 'leye')
@@ -224,7 +226,19 @@ def get_inputs():
         inputs[4] = get_obj_values(labelled[i], 'lnostril')
         inputs[5] = get_obj_values(labelled[i], 'rnostril')
         print(labelled[i])
-        print('\n', inputs, '\n')
+        print(inputs)
+        for input in inputs:
+            if input != -1:
+                # Convert float result to int and round down so we maintain
+                # our -1 encoding for non-present labels
+                input[0] = int(math.floor(input[0]/x_diff))
+                input[1] = int(math.floor(input[1]/x_diff))
+                input[2] = int(math.floor(input[2]/x_diff))
+                input[3] = int(math.floor(input[3]/x_diff))
+
+        print(inputs, '\n')
+        inputsReturn.append(inputs)
+    return inputsReturn, labelled
 
 
 #####################################################################
@@ -241,4 +255,7 @@ labelled = find_labelled(labelsfile)[0]
 # that don't have corresponding compressed imgs in the compressed directory
 compress_imgs(labelled)
 
-get_inputs()
+inputs = get_inputs()
+
+print(inputs[0])
+print(inputs[1])
