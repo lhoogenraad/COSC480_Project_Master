@@ -259,3 +259,6 @@ inputs = get_inputs()
 
 print(inputs[0])
 print(inputs[1])
+
+print(inputs[0][0])
+print(inputs[1][0])
