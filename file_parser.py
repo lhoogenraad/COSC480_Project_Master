@@ -151,6 +151,9 @@ def get_obj_values(file, objname):
     for node in root:
         if node.tag == 'object':
             for objnode in node:
+                # Ignore sheepface2 tags
+                if objnode.tag == 'name' and objnode.text == 'sheepface2':
+                    break
                 if objnode.tag == 'subobj':
                     # At this point, we are iterating through all the nodes
                     # in the <subnode></subnode> tag
@@ -169,6 +172,8 @@ def get_obj_values(file, objname):
                                         elif coordsobj.tag == 'y2':
                                             values[3] = coordsobj.text
     return values
+
+
 # Given a list of xml files, get all the inputs required
 # for identifying the sheep facial features i.e. coords of
 # the facial features such as right eye etc.
@@ -190,7 +195,7 @@ def get_inputs():
     labelsfile = read_labels(os.path.join(currentdir, "labels"))
     # All the label xml files that have been labelled.
     labelled = find_labelled(labelsfile)[0]
-    inputs = []
+    inputs = [-1, -1, -1, -1, -1, -1]
     # for each XML files in the list of filenames in labelled
     for i in range(len(labelled)):
         # These vars represent the width and height of the original image
@@ -200,17 +205,26 @@ def get_inputs():
         imgwidth = -1
         tree = ET.parse(labelled[i])
         # Append an empty array that gives no labels.
-        inputs.append([-1, -1, -1, -1, -1, -1])
+        #inputs.append([-1, -1, -1, -1, -1, -1])
         root = tree.getroot()
         # finding the dimensions of the original, uncompressed img
         for node in root:
             if node.tag == 'size':
                 for sizenode in node:
                     if sizenode.tag == 'width':
-                        imgwidth = sizenode.text
+                        imgwidth = int(sizenode.text)
                     elif sizenode.tag == 'height':
-                        imgheight = sizenode.text
-        print(imgheight, imgwidth)
+                        imgheight = int(sizenode.text)
+        x_diff = imgwidth/128
+        y_diff = imgheight/128
+        inputs[0] = get_obj_values(labelled[i], 'leye')
+        inputs[1] = get_obj_values(labelled[i], 'reye')
+        inputs[2] = get_obj_values(labelled[i], 'rmouth')
+        inputs[3] = get_obj_values(labelled[i], 'lmouth')
+        inputs[4] = get_obj_values(labelled[i], 'lnostril')
+        inputs[5] = get_obj_values(labelled[i], 'rnostril')
+        print(labelled[i])
+        print('\n', inputs, '\n')
 
 
 #####################################################################
@@ -228,5 +242,3 @@ labelled = find_labelled(labelsfile)[0]
 compress_imgs(labelled)
 
 get_inputs()
-
-print(get_obj_values('labels/1094.18_336.xml', 'reye'))
