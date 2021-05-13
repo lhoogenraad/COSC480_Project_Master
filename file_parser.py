@@ -225,8 +225,6 @@ def get_inputs():
         inputs[3] = get_obj_values(labelled[i], 'lmouth')
         inputs[4] = get_obj_values(labelled[i], 'lnostril')
         inputs[5] = get_obj_values(labelled[i], 'rnostril')
-        print(labelled[i])
-        print(inputs)
         for input in inputs:
             if input != -1:
                 # Convert float result to int and round down so we maintain
@@ -236,7 +234,6 @@ def get_inputs():
                 input[2] = int(math.floor(input[2]/x_diff))
                 input[3] = int(math.floor(input[3]/y_diff))
 
-        print(inputs, '\n')
         inputsReturn.append(inputs)
     return inputsReturn, labelled
 
@@ -254,11 +251,3 @@ labelled = find_labelled(labelsfile)[0]
 # Run this everytime the script executes to check for labelled XMl files
 # that don't have corresponding compressed imgs in the compressed directory
 compress_imgs(labelled)
-
-inputs = get_inputs()
-
-print(inputs[0])
-print(inputs[1])
-
-print(inputs[0][0])
-print(inputs[1][0])
